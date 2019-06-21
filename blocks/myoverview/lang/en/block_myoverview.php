@@ -74,6 +74,8 @@ $string['hidecourse'] = 'Hide from view';
 $string['hiddencourses'] = 'Hidden';
 $string['show'] = 'Show this course';
 $string['privacy:request:preference:set'] = 'The value of the setting \'{$a->name}\' was \'{$a->value}\'';
+$string['aria:infoarea'] = 'Show information areas';
+$string['infoarea'] = 'Information Areas';
 
 // Deprecated since Moodle 3.6.
 $string['defaulttab'] = 'Default tab';

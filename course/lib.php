@@ -4143,7 +4143,11 @@ function course_classify_for_timeline($course, $user = null, $completioninfo = n
     if (!empty($course->startdate) && (course_classify_start_date($course) > $today)) {
         return COURSE_TIMELINE_FUTURE;
     }
-
+    
+    if (preg_match("/^SUPPORT|INFO|PROG_/", $course->idnumber)) {
+           return COURSE_INFOAREA;
+    }
+    
     // Everything else is in progress.
     return COURSE_TIMELINE_INPROGRESS;
 }

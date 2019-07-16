@@ -154,7 +154,7 @@ class academic_year_cli {
             $newcategory = core_course_category::create($category);
         } catch (moodle_exception $e) {
             // we can recover from a duplicate category id
-            if ($e->errorcode == 'categoryidnumbertaken') {
+            if ($e->errorcode === 'categoryidnumbertaken') {
                 $category->idnumber = $category->name . '.' . $this->startyear;
                 $newcategory = core_course_category::create($category);
             } else {

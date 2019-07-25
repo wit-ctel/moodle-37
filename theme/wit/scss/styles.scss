@@ -35,10 +35,6 @@ a {
     max-height: 100px;
 }
 
-#page {
-    background-color: #f4f4f4;
-}
-
 /**login page remove page background **/
 .login-page-wrapper {
     background-color:transparent !important;
@@ -161,6 +157,19 @@ a {
 .context-header-settings-menu, .region-main-settings-menu {
     margin-top: 15px;
     margin-right: 20px;
+}
+
+/**
+* Reduce Block Width
+*/
+
+@include media-breakpoint-up (md) {
+   [data-region="blocks-column"] {width: 250px;float: right;}
+
+   #region-main-settings-menu.has-blocks, #region-main.has-blocks {
+       display: inline-block;
+       width: calc(100% - 265px);
+    }
 }
 
 

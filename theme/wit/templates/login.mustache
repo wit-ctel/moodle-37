@@ -69,30 +69,83 @@ require(['jquery'], function($) {
     if (navigator.cookieEnabled) { 
          $("#cookiesenabled").hide();
     }
+
+/**
+ * 
+  Moodle Login Username Validation
+  This function is called when form with ID="login" is submitted  
+  @return HTML error in the #username error DIV
+ */
+
+
     $("#login").submit(function(event) {
+
         // Remove error if already exists
         if ($('#username-error').length){
             $('#username-error').remove();
         }
-        //get username input content
+
+        //define empty loginError variable
+        var loginError = "";
+
+        //get value of user username input
         var username = $("#username").val();
 
+        //create RegExp for staff login
+        var staffRegex = new RegExp(/^[a-zA-Z]+$/);
+
         //create RegExp for student number with W eg. W20082018
-        var regex = new RegExp(/^[a-z]{1}[0-9]{8}$/i);
+        var wRegex = new RegExp(/^[a-z]{1}[0-9]{8}$/i);
 
-        //If username contains @ symbol display error and prevent login submit
+        //create RegExp for student number ONLY
+        var snOnlyRegex = new RegExp(/^[0-9]{8}$/i);
+
+        //create RegExp for student number @ wit.ie
+        var loginRegex = new RegExp(/^[0-9]{8}$/i);
+
+         //If username contains @ symbol
         if( username.indexOf('@') != -1 ){
-            console.log($("#username").val());
-            $('#username').after("<div id='username-error' style='background: red; font-size: 80%; color: white; padding: 5px; margin-top: 10px;'>Please use your Staff ID, not your email address</div>");
-            event.preventDefault();
+            // Split the username into userID and domain
+            var splitUsername = username.split('@');
+            var userID = splitUsername[0];
+            var domain = splitUsername[1];
+
+            // if the login is in the correct format studentnumber@wit.ie remove the @wit.ie and proceed to login
+            if(snOnlyRegex.test(userID) == true && domain=="wit.ie"){
+                $("#username").val(userID);
+            }
+
+            // if a staff member uses @wit.ie tell them to remove it
+            else if(staffRegex.test(userID) == true && domain=="wit.ie"){
+                loginError = "Please Use Your Staff login without '@wit.ie'";   
+            }
+
+            // if a student has used the W before their student number tell them to remove it
+            else if(wRegex.test(userID) == true && domain=="wit.ie"){
+                loginError = "Please enter your student number without the W and include '@wit.ie'";                
+            }
+
+            // if a student uses their email address to login tell them to use their WIT ID
+            else if(domain=="mail.wit.ie"){
+                loginError = "Your WIT Login is your student number '@wit.ie'";        
+            }     
         } 
 
-        //If student ID contains W display error and prevent login submit
-        if(regex.test(username) == true){
-            console.log(regex.test(username));
-            $('#username').after("<div id='username-error' style='background: red; font-size: 80%; color: white; padding: 5px; margin-top: 10px;'>Please enter your student number without the W</div>");
+        //If username contains W and their student number set error
+        else if(wRegex.test(username) == true){            
+            loginError = "Please enter your student number without the W and include '@wit.ie'";
+        }
+
+        //if a username is student number only set error
+        else if(snOnlyRegex.test(username) == true){           
+            loginError = "Please enter your student number '@wit.ie'";
+        }  
+        
+        if(loginError != ""){
+            $('#username').after("<div id='username-error' style='background: red; font-size: 80%; color: white; padding: 5px; margin-top: 10px;'>Error: "+loginError+"</div>");
             event.preventDefault();
-        } 
+        }
+
     });
 
 //Add login page background image
